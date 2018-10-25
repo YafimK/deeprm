@@ -6,6 +6,7 @@ import environment
 import parameters
 import pg_network
 import other_agents
+import cycler
 
 
 def discount(x, gamma):
@@ -160,7 +161,11 @@ def launch(pa, pg_resume=None, render=False, plot=False, repre='image', end='no_
         cm = plt.get_cmap('gist_rainbow')
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        ax.set_color_cycle([cm(1. * i / num_colors) for i in range(num_colors)])
+
+        # ax.set_color_cycle([cm(1. * i / num_colors) for i in range(num_colors)])
+
+        colors = [cm(1. * i / num_colors) for i in range(num_colors)]
+        ax.set_prop_cycle('color', colors)
 
         for test_type in test_types:
             slow_down_cdf = np.sort(np.concatenate(jobs_slow_down[test_type]))
@@ -170,7 +175,7 @@ def launch(pa, pg_resume=None, render=False, plot=False, repre='image', end='no_
         plt.legend(loc=4)
         plt.xlabel("job slowdown", fontsize=20)
         plt.ylabel("CDF", fontsize=20)
-        # plt.show()
+        plt.show()
         plt.savefig(pg_resume + "_slowdown_fig" + ".pdf")
 
     return all_discount_rews, jobs_slow_down
